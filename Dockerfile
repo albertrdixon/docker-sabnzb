@@ -1,6 +1,7 @@
 FROM alpine:3.5
 MAINTAINER Albert Dixon <albert@dixon.rocks>
 
+EXPOSE 8080 8090
 ENTRYPOINT ["/sbin/tini", "-g", "--"]
 CMD ["/bin/start-cmd"]
 ENV SABNZB_VERSION=1.2.0 \
@@ -8,7 +9,7 @@ ENV SABNZB_VERSION=1.2.0 \
     TINI_VERSION=v0.13.2 \
 
     PIA_REMOTE=nl.privateinternetaccess.com \
-    PIA_REMOTE_PORT=1194 \
+    PIA_REMOTE_PORT=1198 \
     VPN_AUTH=sha1 \
     VPN_CIPHER=aes-128-cbc \
     VPN_DEV=tun0 \
@@ -24,6 +25,7 @@ RUN apk add --update --no-cache --purge \
       gcc \
       libffi-dev \
       make \
+      openssl \
       openssl-dev \
       openvpn \
       python \
@@ -45,7 +47,7 @@ RUN apk add --update --no-cache --purge \
     # Install python deps
     && curl -s https://bootstrap.pypa.io/get-pip.py | python \
     && pip install -U pip \
-    && pip install -U \
+    && pip install -U --no-cache-dir \
         cheetah \
         pip \
         pyopenssl \

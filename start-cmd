@@ -7,7 +7,11 @@ EOH
 
 test -d /dev/net || mkdir -vp /dev/net
 test -c /dev/net/tun || mknod /dev/net/tun c 10 200
-openvpn --mktun --tun=$VPN_DEV
+openvpn --mktun --dev $VPN_DEV
 
-/usr/local/bin/sigil -p -f /config/openvpn/openvpn.ovpn >/config/openvpn/openvpn.ovpn
-exec /usr/sbin/supervisord -c /config/supervisor.conf
+/usr/local/bin/sigil -p -f /config/openvpn/openvpn.tmpl >/config/openvpn/openvpn.ovpn
+echo "openvpn.ovpn"
+cat /config/openvpn/openvpn.ovpn
+echo
+rm -f /config/openvpn/openvpn.tmpl
+exec /usr/bin/supervisord -c /config/supervisor.conf
