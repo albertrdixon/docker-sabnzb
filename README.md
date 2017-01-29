@@ -12,6 +12,7 @@ $ docker run --rm \
     --env=PIA_USERNAME=your_privateinternetaccess_username \
     --env=PIA_PASSWORD=your_privateinternetaccess_password \
     --volume=/path/to/pia/certs:/etc/ssl/openvpn \
+    --volume=/opt/sabnzb:/data \
     --volume=/downloads:/downloads \
     --cap-add=NET_ADMIN \
     --dns=209.222.18.222 \
@@ -20,7 +21,8 @@ $ docker run --rm \
 
 # rkt
 $ rkt run \
-    --volume=ssl,kind=host,sourc=/path/to/pia/certs \
+    --volume=ssl,kind=host,source=/path/to/pia/certs \
+    --volume=data,kind=host,source=/opt/sabnzb \
     --volume=downloads,kind=host,source=/downloads \
     --set-env=PIA_USERNAME=your_privateinternetaccess_username \
     --set-env=PIA_PASSWORD=your_privateinternetaccess_password \
@@ -28,5 +30,6 @@ $ rkt run \
     --port=8080-tcp:8080 --port=8090-tcp:8090 \
     --dns=209.222.18.222 --dns=209.222.18.218 \
     --mount=volume=ssl,target=/etc/ssl/openvpn \
+    --mount=volume=data,target=/data \
     --mount=volume=downloads,target=/downloads
 ```

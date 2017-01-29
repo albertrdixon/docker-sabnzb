@@ -5,6 +5,7 @@ $PIA_USERNAME
 $PIA_PASSWORD
 EOH
 
+test -d /data || mkdir -v /data
 test -d /dev/net || mkdir -vp /dev/net
 test -c /dev/net/tun || mknod /dev/net/tun c 10 200
 openvpn --mktun --dev $VPN_DEV
