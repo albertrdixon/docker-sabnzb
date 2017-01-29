@@ -1,8 +1,13 @@
 #!/bin/sh
+set -e
 cat <<EOH >/config/openvpn/credentials
 $PIA_USERNAME
 $PIA_PASSWORD
 EOH
+
+test -d /dev/net || mkdir -vp /dev/net
+test -c /dev/net/tun || mknod /dev/net/tun c 10 200
+openvpn --mktun --tun=$VPN_DEV
 
 /usr/local/bin/sigil -p -f /config/openvpn/openvpn.ovpn >/config/openvpn/openvpn.ovpn
 exec /usr/sbin/supervisord -c /config/supervisor.conf

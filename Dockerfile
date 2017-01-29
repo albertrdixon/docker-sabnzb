@@ -5,7 +5,15 @@ ENTRYPOINT ["/sbin/tini", "-g", "--"]
 CMD ["/bin/start-cmd"]
 ENV SABNZB_VERSION=1.2.0 \
     SIGIL_VERSION=0.4.0 \
-    TINI_VERSION=v0.13.2
+    TINI_VERSION=v0.13.2 \
+
+    PIA_REMOTE=nl.privateinternetaccess.com \
+    PIA_REMOTE_PORT=1194 \
+    VPN_AUTH=sha1 \
+    VPN_CIPHER=aes-128-cbc \
+    VPN_DEV=tun0 \
+    VPN_PROTO=udp \
+    VPN_VERBOSITY=1
 
 RUN apk add --update --no-cache --purge \
       autoconf \
