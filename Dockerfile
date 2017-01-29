@@ -3,7 +3,7 @@ MAINTAINER Albert Dixon <albert@dixon.rocks>
 
 EXPOSE 8080 8090
 ENTRYPOINT ["/sbin/tini", "-g", "--"]
-CMD ["/bin/start-cmd"]
+CMD ["/bin/start"]
 ENV SABNZB_VERSION=1.2.0 \
     SIGIL_VERSION=0.4.0 \
     TINI_VERSION=v0.13.2 \
@@ -54,6 +54,7 @@ RUN apk add --update --no-cache --purge \
         supervisor \
     && pip install http://www.golug.it/pub/yenc/yenc-0.4.0.tar.gz \
 
+    # Install apps
     && curl -Ls -o /sigil.tgz https://github.com/gliderlabs/sigil/releases/download/v$SIGIL_VERSION/sigil_${SIGIL_VERSION}_Linux_x86_64.tgz \
     && curl -Ls -o /sabnzb.tgz https://github.com/sabnzbd/sabnzbd/releases/download/$SABNZB_VERSION/SABnzbd-$SABNZB_VERSION-src.tar.gz \
     && mkdir -pv /usr/src/app \
@@ -74,5 +75,5 @@ RUN apk add --update --no-cache --purge \
         libffi-dev \
     && rm -rvf /var/cache/apk/* /tmp/* /var/tmp/*
 
-COPY start-cmd /bin/
+COPY start /bin/
 COPY config /config
