@@ -11,7 +11,6 @@ $ docker run --rm \
     --publish=8080:8080 --publish=8090:8090 \
     --env=PIA_USERNAME=your_privateinternetaccess_username \
     --env=PIA_PASSWORD=your_privateinternetaccess_password \
-    --volume=/path/to/pia/certs:/etc/ssl/openvpn \
     --volume=/opt/sabnzb:/data \
     --volume=/downloads:/downloads \
     --cap-add=NET_ADMIN \
@@ -21,7 +20,6 @@ $ docker run --rm \
 
 # rkt
 $ rkt run \
-    --volume=ssl,kind=host,source=/path/to/pia/certs \
     --volume=data,kind=host,source=/opt/sabnzb \
     --volume=downloads,kind=host,source=/downloads \
     --set-env=PIA_USERNAME=your_privateinternetaccess_username \
@@ -29,7 +27,6 @@ $ rkt run \
     quay.io/albertrdixon/sabnzb \
     --port=8080-tcp:8080 --port=8090-tcp:8090 \
     --dns=209.222.18.222 --dns=209.222.18.218 \
-    --mount=volume=ssl,target=/etc/ssl/openvpn \
     --mount=volume=data,target=/data \
     --mount=volume=downloads,target=/downloads
 ```

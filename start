@@ -1,15 +1,34 @@
 #!/bin/sh
 set -e
+
+echo '---> Create credentials file.'
 cat <<EOH >/config/openvpn/credentials
 $PIA_USERNAME
 $PIA_PASSWORD
 EOH
+chmod -v 0600 /config/openvpn/credentials
+echo
 
+mkdir -p /etc/ssl/openvpn
+test -z "$(ls -A /etc/ssl/openvpn)" && {
+  echo '---> Download PIA certs'
+  url="https://www.privateinternetaccess.com/openvpn/openvpn.zip"
+  test $VPN_PROTO = tcp && url="https://www.privateinternetaccess.com/openvpn/openvpn-strong-tcp.zip"
+  curl -#Lk -o openvpn.zip "$url"
+  unzip -u openvpn.zip ca.*.crt crl.*.pem -d /etc/ssl/openvpn
+}
+export VPN_CA=$(ls /etc/ssl/openvpn/ca*) VPN_CRL=$(ls /etc/ssl/openvpn/crl*)
+echo
+
+echo '---> Create VPN tunnel device.'
 test -d /data || mkdir -v /data
 test -d /dev/net || mkdir -vp /dev/net
 test -c /dev/net/tun || mknod /dev/net/tun c 10 200
 openvpn --mktun --dev $VPN_DEV
+echo
 
-/usr/local/bin/sigil -p -f /config/openvpn/openvpn.tmpl >/config/openvpn/openvpn.ovpn
+echo '---> Render openvpn config.'
+/usr/local/bin/sigil -p -f /config/openvpn/openvpn.tmpl | tee /config/openvpn/openvpn.ovpn
 rm -f /config/openvpn/openvpn.tmpl
+echo
 exec /usr/bin/supervisord -c /config/supervisor.conf

@@ -14,6 +14,7 @@ auth-user-pass credentials
 comp-lzo
 verb $VPN_VERBOSITY
 reneg-sec 0
-crl-verify /etc/ssl/openvpn/crl.pem
-ca /etc/ssl/openvpn/ca.crt
+crl-verify $VPN_CRL
+ca $VPN_CA
 disable-occ
+log /proc/self/fd/2
