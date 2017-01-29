@@ -21,14 +21,16 @@ export VPN_CA=$(ls /etc/ssl/openvpn/ca*) VPN_CRL=$(ls /etc/ssl/openvpn/crl*)
 echo
 
 echo '---> Create VPN tunnel device.'
-test -d /data || mkdir -v /data
 test -d /dev/net || mkdir -vp /dev/net
 test -c /dev/net/tun || mknod /dev/net/tun c 10 200
-openvpn --mktun --dev $VPN_DEV
 echo
+
+test -d /data || mkdir -v /data
+chown -R nobody /data
 
 echo '---> Render openvpn config.'
 /usr/local/bin/sigil -p -f /config/openvpn/openvpn.tmpl | tee /config/openvpn/openvpn.ovpn
 rm -f /config/openvpn/openvpn.tmpl
 echo
+
 exec /usr/bin/supervisord -c /config/supervisor.conf
