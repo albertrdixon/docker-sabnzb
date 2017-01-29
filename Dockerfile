@@ -3,9 +3,9 @@ MAINTAINER Albert Dixon <albert@dixon.rocks>
 
 ENTRYPOINT ["/sbin/tini", "-g", "--"]
 CMD ["/bin/start-cmd"]
-ENV TINI_VERSION=v0.13.2 \
-    SABNZB_VERSION=1.2.0 \
-    SIGIL_VERSION=0.4.0
+ENV SABNZB_VERSION=1.2.0 \
+    SIGIL_VERSION=0.4.0 \
+    TINI_VERSION=v0.13.2
 
 RUN apk add --update --no-cache --purge \
       autoconf \
@@ -27,7 +27,7 @@ RUN apk add --update --no-cache --purge \
       unzip \
 
     # Install par2cmdline
-    && curl -s -o par2.zip https://github.com/Parchive/par2cmdline/archive/master.zip \
+    && curl -Ls -o par2.zip https://github.com/Parchive/par2cmdline/archive/master.zip \
     && unzip par2 \
     && cd par2cmdline-master \
     && aclocal && automake --add-missing && autoconf \
@@ -44,11 +44,11 @@ RUN apk add --update --no-cache --purge \
         supervisor \
     && pip install http://www.golug.it/pub/yenc/yenc-0.4.0.tar.gz \
 
-    && curl -s -o /sigil.tgz https://github.com/gliderlabs/sigil/releases/download/v$SIGIL_VERSION/sigil_${SIGIL_VERSION}_Linux_x86_64.tgz
-    && curl -s -o /sabnzb.tgz https://github.com/sabnzbd/sabnzbd/releases/download/$SABNZB_VERSION/SABnzbd-$SABNZB_VERSION-src.tar.gz
+    && curl -Ls -o /sigil.tgz https://github.com/gliderlabs/sigil/releases/download/v$SIGIL_VERSION/sigil_${SIGIL_VERSION}_Linux_x86_64.tgz \
+    && curl -Ls -o /sabnzb.tgz https://github.com/sabnzbd/sabnzbd/releases/download/$SABNZB_VERSION/SABnzbd-$SABNZB_VERSION-src.tar.gz \
     && mkdir -pv /usr/src/app \
     && tar xvzf sigil.tgz -C /usr/local/bin \
-    && tar xvzf sabnzb.tgz -C /usr/src/app \
+    && tar xvzf sabnzb.tgz --strip-components=1 -C /usr/src/app \
     && rm -rvf *.tgz \
     
     # Clean up

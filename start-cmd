@@ -1,0 +1,8 @@
+#!/bin/sh
+cat <<EOH >/config/openvpn/credentials
+$PIA_USERNAME
+$PIA_PASSWORD
+EOH
+
+/usr/local/bin/sigil -p -f /config/openvpn/openvpn.ovpn >/config/openvpn/openvpn.ovpn
+exec /usr/sbin/supervisord -c /config/supervisor.conf
